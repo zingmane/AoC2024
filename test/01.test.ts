@@ -1,21 +1,13 @@
 import * as day01 from "../src/01.ts";
 import { assertEquals } from "@std/assert";
 
-const input = `1000
-2000
-3000
-
-4000
-
-5000
-6000
-
-7000
-8000
-9000
-
-10000`;
+const input = `3   4
+4   3
+2   5
+1   3
+3   9
+3   3`;
 
 Deno.test("day 01", () => {
-  assertEquals(day01.run(input), [24000, 45000]);
+  assertEquals(day01.run(input), [11, "?"]);
 });
