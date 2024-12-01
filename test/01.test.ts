@@ -9,5 +9,5 @@ const input = `3   4
 3   3`;
 
 Deno.test("day 01", () => {
-  assertEquals(day01.run(input), [11, "?"]);
+  assertEquals(day01.run(input), [11, "part2"]);
 });
