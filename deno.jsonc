@@ -1,0 +1,28 @@
+{
+  "tasks": {
+    "start": "deno run -A ./index.ts",
+    "start1": "deno run -A ./src/01.ts",
+  },
+  "fmt": {
+    "files": {
+      "include": [
+        "src/",
+        "test/",
+        "index.ts"
+      ]
+    },
+    "options": {
+      "lineWidth": 120
+    }
+  },
+  "imports": {
+    "@std/assert": "jsr:@std/assert@^1.0.8",
+    "@std/cli": "jsr:@std/cli@^1.0.6",
+    "@std/cli/parse-args": "jsr:@std/cli/parse-args",
+    "@std/collections": "jsr:@std/collections@^1.0.9",
+    "@types/lodash": "npm:@types/lodash@4.14.192",
+    "lodash": "npm:lodash@4.17.21",
+    "@types/lodash/fp": "npm:@types/lodash@4.14.192/fp",
+    "lodash/fp": "npm:lodash@4.17.21/fp.js",
+  }
+}
