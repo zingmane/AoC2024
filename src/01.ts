@@ -23,5 +23,19 @@ export const run = (raw: string) => {
   );
 
   const part1 = getDistanceSum(leftListSorted, rightListSorted);
-  return [part1, "part2"];
+
+  // part2
+
+  const getSimilarityScoreSum = (listA: number[], listB: number[]) => {
+    const scores = listA.map((a: number) => {
+      const countInB = listB.filter((b: number) => b === a).length;
+      return a * countInB;
+    });
+
+    return fp.sum(scores);
+  };
+
+  const part2 = getSimilarityScoreSum(leftListSorted, rightListSorted);
+
+  return [part1, part2];
 };
