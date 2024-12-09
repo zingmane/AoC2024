@@ -19,7 +19,13 @@ export const run = (raw: string) => {
     trimEmptyLastLine,
   )(raw);
 
-  const filteredReports = reports.filter((report) => {
+  const getTrend = (lastLevel: number, currentLevel: number): Trend =>
+    match([lastLevel, currentLevel])
+      .when(([last, current]) => last < current, () => Trend.INCREASE)
+      .when(([last, current]) => last > current, () => Trend.DECREASE)
+      .otherwise(() => Trend.SAME);
+
+  const part1Reports = reports.filter((report) => {
     let trend;
     let isValid = true;
 
@@ -27,10 +33,7 @@ export const run = (raw: string) => {
       const lastLevel = report[i - 1];
       const currentLevel = report[i];
 
-      const newTrend = match([lastLevel, currentLevel])
-        .when(([last, current]) => last < current, () => Trend.INCREASE)
-        .when(([last, current]) => last > current, () => Trend.DECREASE)
-        .otherwise(() => Trend.SAME);
+      const newTrend = getTrend(lastLevel, currentLevel);
 
       if (!trend) {
         trend = newTrend;
@@ -48,7 +51,41 @@ export const run = (raw: string) => {
     return isValid;
   });
 
-  const part1 = filteredReports.length;
+  // part 2 does not work with multiple variations 🤷
+  const part2Reports = reports.filter((report) => {
+    const cleanReport = [...new Set(report)];
 
-  return [part1, "part2"];
+    let trend;
+    let damperCount = cleanReport.length === report.length ? 0 : 1;
+    let skipNext = false;
+
+    for (let i = 1; i < cleanReport.length; i++) {
+      const lastLevel = skipNext ? cleanReport[i - 2] : cleanReport[i - 1]; // get the level before the damper count increase
+      const currentLevel = cleanReport[i];
+
+      const newTrend = getTrend(lastLevel, currentLevel);
+
+      if (!trend) {
+        trend = newTrend;
+      }
+
+      if (trend !== newTrend) {
+        damperCount++;
+        skipNext = true;
+      }
+
+      const absoluteChange = Math.abs(lastLevel - currentLevel);
+      if (absoluteChange < 1 || absoluteChange > 3) {
+        damperCount++;
+        skipNext = true;
+      }
+    }
+
+    return damperCount <= 1;
+  });
+
+  const part1 = part1Reports.length;
+  const part2 = part2Reports.length;
+
+  return [part1, part2];
 };
