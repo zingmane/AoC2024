@@ -9,7 +9,8 @@
     "npm:@types/lodash@*": "4.14.190",
     "npm:lodash@4.17.21": "4.17.21",
     "npm:pragmatic-fp-ts@*": "1.7.0",
-    "npm:ts-pattern@4.0.6": "4.0.6"
+    "npm:ts-pattern@4.0.6": "4.0.6",
+    "npm:ts-pattern@^5.5.0": "5.5.0"
   },
   "jsr": {
     "@std/assert@1.0.8": {
@@ -40,6 +41,9 @@
     },
     "ts-pattern@4.0.6": {
       "integrity": "sha512-sFHQYD4KoysBi7e7a2mzDPvRBeqA4w+vEyRE+P5MU9VLq8eEYxgKCgD9RNEAT+itGRWUTYN+hry94GDPLb1/Yw=="
+    },
+    "ts-pattern@5.5.0": {
+      "integrity": "sha512-jqbIpTsa/KKTJYWgPNsFNbLVpwCgzXfFJ1ukNn4I8hMwyQzHMJnk/BqWzggB0xpkILuKzaO/aMYhS0SkaJyKXg=="
     }
   },
   "remote": {
@@ -607,7 +611,8 @@
       "jsr:@std/cli@^1.0.6",
       "jsr:@std/collections@^1.0.9",
       "npm:@types/lodash@4.14.192",
-      "npm:lodash@4.17.21"
+      "npm:lodash@4.17.21",
+      "npm:ts-pattern@^5.5.0"
     ]
   }
 }
