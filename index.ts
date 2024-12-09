@@ -16,7 +16,6 @@ const padDay = day.length === 1 ? `0${day}` : day;
 
 try {
   const module = await import(`./src/${padDay}.ts`);
-  // const runner = await new Deno.Command(Deno.execPath(), { args: ["run", `./src/${padDay}.ts`] }).output();
   const rawContent = await readFile(`./input/${padDay}.txt`);
 
   const result = await module.run(rawContent);
