@@ -1,7 +1,7 @@
 import * as theDay from "../src/04.ts";
 import { assertEquals } from "@std/assert";
 
-const input1 = `MMMSXXMASM
+const input = `MMMSXXMASM
 MSAMXMSMSA
 AMXSXMAAMM
 MSAMASMSMX
@@ -13,5 +13,5 @@ MAMMMXMMMM
 MXMXAXMASX`;
 
 Deno.test("day 04", () => {
-  assertEquals(theDay.run(input1), [18, "part2"]);
+  assertEquals(theDay.run(input), [18, "part2"]);
 });
