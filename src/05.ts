@@ -20,36 +20,34 @@ export const run = (raw: string) => {
     splitByNewline,
   )(updateRaw);
 
-  console.log(`###LOG###: pageOrderingRules`, pageOrderingRules);
-  console.log(`###LOG###: update`, updates);
-
   const filterApplyableRules = (rules: [number, number][], update: number[]) =>
     rules.filter(([a, b]) => update.includes(a) && update.includes(b));
 
   const allRulesPass = (applyableRules: [number, number][], update: number[]) => {
+    return applyableRules.every(([page1, page2]) => update.indexOf(page1) < update.indexOf(page2));
   };
 
   const getPart1 = () => {
-    // for (let i = 0; i < updates.length; i++) {
-    //   const update = updates[i];
+    let middlePageSum = 0;
 
-    //   const rules = filterApplyableRules(pageOrderingRules, update);
-    // }
-    const rules = filterApplyableRules(pageOrderingRules, updates[0]);
+    for (let i = 0; i < updates.length; i++) {
+      const update = updates[i];
 
-    allRulesPass(rules, updates[0]);
-    // console.log(`###LOG###: rules`, rules);
+      const rules = filterApplyableRules(pageOrderingRules, update);
+      const isPassing = allRulesPass(rules, update);
+
+      if (isPassing) {
+        const middlePageIndex = Math.floor(update.length / 2);
+        const middlePage = update[middlePageIndex];
+        middlePageSum += middlePage;
+      }
+    }
+
+    return middlePageSum;
   };
 
   const part1 = getPart1();
   const part2 = "part2";
-
-  const array = [[1, 2], [3, 4], [5, 6], [7, 8], [9, 10]];
-
-  for (const [a, b] of array) {
-    console.log(`###LOG###: a`, a);
-    console.log(`###LOG###: b`, b);
-  }
 
   return [part1, part2];
 };
