@@ -76,5 +76,33 @@ export const run = (raw: string) => {
 
   const part1 = getPart1(parsedLetters);
 
-  return [part1, "part2"];
+  const getPart2 = (letters: string[][]) => {
+    const searchString = "MAS";
+    const searchStringLength = searchString.length;
+
+    let xmasCount = 0;
+
+    for (let i = 0; i < letters.length; i++) {
+      const row = letters[i];
+      for (let col = 0; col < row.length; col++) {
+        const testTlbr1 = getTopLeft2BottomRight(letters, i - 1, col - 1, searchStringLength).join("");
+        const testTlbr2 = testTlbr1.split("").reverse().join("");
+        const testBltr1 = getBottomLeft2TopRight(letters, i - 1, col + 1, searchStringLength).join("");
+        const testBltr2 = testBltr1.split("").reverse().join("");
+
+        if (
+          (testTlbr1 === searchString || testTlbr2 === searchString) &&
+          (testBltr1 === searchString || testBltr2 === searchString)
+        ) {
+          xmasCount++;
+        }
+      }
+    }
+
+    return xmasCount;
+  };
+
+  const part2 = getPart2(parsedLetters);
+
+  return [part1, part2];
 };

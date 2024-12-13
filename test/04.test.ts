@@ -13,5 +13,5 @@ MAMMMXMMMM
 MXMXAXMASX`;
 
 Deno.test("day 04", () => {
-  assertEquals(theDay.run(input), [18, "part2"]);
+  assertEquals(theDay.run(input), [18, 9]);
 });
