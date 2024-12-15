@@ -32,34 +32,33 @@ export const run = (raw: string) => {
     return coords[0] < 0 || coords[1] < 0 || coords[0] >= map.length || coords[1] >= map[0].length;
   };
 
+  const getNextCoords = (coords: Coord, direction: Direction): Coord => {
+    const [y, x] = coords;
+    return match(direction)
+      .with("up", () => [y - 1, x])
+      .with("down", () => [y + 1, x])
+      .with("left", () => [y, x - 1])
+      .with("right", () => [y, x + 1])
+      .exhaustive() as Coord;
+  };
+
+  const getMapValue = (map: Map, coords: Coord): MapValue => {
+    const [y, x] = coords;
+    return map[y]?.[x] as MapValue;
+  };
+
+  const NextDirection: Record<Direction, Direction> = {
+    "up": "right",
+    "right": "down",
+    "down": "left",
+    "left": "up",
+  } as const;
+
   const getPart1 = (map: Map) => {
     let direction: Direction = "up";
-
-    const NextDirection: Record<Direction, Direction> = {
-      "up": "right",
-      "right": "down",
-      "down": "left",
-      "left": "up",
-    } as const;
-
     const startCoords: Coord = getStartingPoint(map);
 
     console.log(`startCoords: ${startCoords}`);
-
-    const getNextCoords = (coords: Coord, direction: Direction): Coord => {
-      const [y, x] = coords;
-      return match(direction)
-        .with("up", () => [y - 1, x])
-        .with("down", () => [y + 1, x])
-        .with("left", () => [y, x - 1])
-        .with("right", () => [y, x + 1])
-        .exhaustive() as Coord;
-    };
-
-    const getMapValue = (map: Map, coords: Coord): MapValue => {
-      const [y, x] = coords;
-      return map[y]?.[x] as MapValue;
-    };
 
     let nextCoords: Coord = startCoords;
     const visitedCoordsHash = new Set<string>();
@@ -83,11 +82,32 @@ export const run = (raw: string) => {
 
   const part1 = getPart1(obstacleMap);
 
-  const getPart2 = () => {
-    return "part2";
+  const getPart2 = (map: Map) => {
+    let direction: Direction = "up";
+    const startCoords: Coord = getStartingPoint(map);
+    console.log(`startCoords: ${startCoords}`);
+
+    let nextCoords: Coord = startCoords;
+    const visitedCoordsHash = new Set<string>();
+
+    while (!guardWentOutside(map, nextCoords)) {
+      const nextCoordsTemp = getNextCoords(nextCoords, direction);
+      const nextMapValue = getMapValue(map, nextCoordsTemp);
+
+      if (nextMapValue === "#") {
+        direction = NextDirection[direction];
+        console.log(`switch direction to: ${direction}`);
+        continue;
+      }
+
+      visitedCoordsHash.add(nextCoords.toString());
+      nextCoords = nextCoordsTemp;
+    }
+
+    return visitedCoordsHash.size;
   };
 
-  const part2 = getPart2();
+  const part2 = getPart2(obstacleMap);
 
   return [part1, part2];
 };
