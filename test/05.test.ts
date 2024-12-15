@@ -31,5 +31,5 @@ const input = `47|53
 97,13,75,29,47`;
 
 Deno.test("day 05", () => {
-  assertEquals(theDay.run(input), [143, "part2"]);
+  assertEquals(theDay.run(input), [143, 123]);
 });
