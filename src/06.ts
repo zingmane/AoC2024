@@ -63,7 +63,7 @@ export const run = (raw: string) => {
     let nextCoords: Coord = startCoords;
     const visitedCoordsHash = new Set<string>();
 
-    while (!isInsideMap(map, nextCoords)) {
+    while (isInsideMap(map, nextCoords)) {
       const nextCoordsTemp = getNextCoords(nextCoords, direction);
       const nextMapValue = getMapValue(map, nextCoordsTemp);
 
@@ -80,24 +80,24 @@ export const run = (raw: string) => {
     return visitedCoordsHash.size;
   };
 
-  // const part1 = getPart1(obstacleMap);
-  const part1 = 41;
+  const part1 = getPart1(obstacleMap);
 
-  const isEndlessLoop = (map: Map, obstructionCoords: Coord, startCoords: Coord, direction: Direction) => {
+  const isEndlessLoop = (map: Map, obstructionCoords: Coord, startCoords: Coord, startDirection: Direction) => {
     if (!isInsideMap(map, obstructionCoords)) {
       return false;
     }
 
+    let direction = startDirection;
     const tempMap = getObstructionMapToCheckForEndlessLoop(map, obstructionCoords);
 
-    console.log(`###LOG###: tempMap: ${printMap(tempMap)}`);
     let isLoop = false;
-    console.log(`startCoords: ${startCoords}`);
+    console.log(`loop startCoords: ${startCoords}`);
 
     let nextCoords: Coord = startCoords;
+    // let firstCoords: Coord = getNextCoords(startCoords, direction);
     let directionChanges = 0;
 
-    while (isLoop || isInsideMap(tempMap, nextCoords)) {
+    while (!isLoop && isInsideMap(tempMap, nextCoords)) {
       const nextCoordsTemp = getNextCoords(nextCoords, direction);
       const nextMapValue = getMapValue(tempMap, nextCoordsTemp);
 
@@ -107,9 +107,13 @@ export const run = (raw: string) => {
         continue;
       }
 
-      if (directionChanges < 4 && startCoords.toString() === nextCoordsTemp.toString()) {
+      if (directionChanges > 3 && startCoords.toString() === nextCoordsTemp.toString()) {
         isLoop = true;
-        break;
+      }
+
+      if (isLoop) {
+        console.log("endless loop with:");
+        printMap(tempMap);
       }
 
       nextCoords = nextCoordsTemp;
@@ -124,8 +128,8 @@ export const run = (raw: string) => {
     return newMap;
   };
 
-  const printMap = (map: Map) => {
-    for (const row of map) {
+  const printMap = (m: Map) => {
+    for (const row of m) {
       console.log(row.join(""));
     }
   };
@@ -136,6 +140,7 @@ export const run = (raw: string) => {
 
     let nextCoords: Coord = startCoords;
     let nextEndlessLoopStartCoords: Coord = startCoords;
+    let nextEndlessLoopDirection: Direction = direction;
     const visitedCoordsHash = new Set<string>();
     let endlessLoopCount = 0;
 
@@ -143,12 +148,12 @@ export const run = (raw: string) => {
       const nextCoordsTemp = getNextCoords(nextCoords, direction);
       const nextMapValue = getMapValue(map, nextCoordsTemp);
 
-      const isEndlessLoopMap = isEndlessLoop(map, nextCoordsTemp, nextEndlessLoopStartCoords, direction);
+      const isEndlessLoopMap = isEndlessLoop(map, nextCoordsTemp, nextEndlessLoopStartCoords, nextEndlessLoopDirection);
       if (isEndlessLoopMap) {
         endlessLoopCount++;
-        nextEndlessLoopStartCoords = nextCoordsTemp;
+        nextEndlessLoopStartCoords = nextCoords;
+        nextEndlessLoopDirection = direction;
       }
-      console.log(`isEndlessLoopMap: ${isEndlessLoopMap}`);
 
       if (nextMapValue === "#") {
         direction = NextDirection[direction];
@@ -162,20 +167,20 @@ export const run = (raw: string) => {
     return endlessLoopCount;
   };
 
-  const obstacleMap2 = [
-    [".", ".", ".", ".", "#", ".", ".", ".", ".", "."],
-    [".", ".", ".", ".", ".", ".", ".", ".", ".", "#"],
-    [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-    [".", ".", "#", ".", ".", ".", ".", ".", ".", "."],
-    [".", ".", ".", ".", ".", ".", ".", "#", ".", "."],
-    [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-    [".", "#", ".", ".", "^", ".", ".", ".", ".", "."],
-    [".", ".", ".", ".", ".", ".", ".", ".", "#", "."],
-    ["#", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-    [".", ".", ".", ".", ".", ".", "#", ".", ".", "."],
-  ];
+  // const obstacleMap2 = [
+  //   [".", ".", ".", ".", "#", ".", ".", ".", ".", "."],
+  //   [".", ".", ".", ".", ".", ".", ".", ".", ".", "#"],
+  //   [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
+  //   [".", ".", "#", ".", ".", ".", ".", ".", ".", "."],
+  //   [".", ".", ".", ".", ".", ".", ".", "#", ".", "."],
+  //   [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
+  //   [".", "#", ".", ".", "^", ".", ".", ".", ".", "."],
+  //   [".", ".", ".", ".", ".", ".", ".", ".", "#", "."],
+  //   ["#", ".", ".", ".", ".", ".", ".", ".", ".", "."],
+  //   [".", ".", ".", ".", ".", ".", "#", ".", ".", "."],
+  // ];
 
-  const part2 = getPart2(obstacleMap2);
+  const part2 = getPart2(obstacleMap);
 
   return [part1, part2];
 };
