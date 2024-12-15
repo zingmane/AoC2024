@@ -69,7 +69,7 @@ export const run = (raw: string) => {
 
       if (nextMapValue === "#") {
         direction = NextDirection[direction];
-        console.log(`switch direction to: ${direction}`);
+        // console.log(`switch direction to: ${direction}`);
         continue;
       }
 
@@ -91,32 +91,41 @@ export const run = (raw: string) => {
     const tempMap = getObstructionMapToCheckForEndlessLoop(map, obstructionCoords);
 
     let isLoop = false;
-    console.log(`loop startCoords: ${startCoords}`);
+    // console.log(`loop startCoords: ${startCoords}`);
 
     let nextCoords: Coord = startCoords;
-    // let firstCoords: Coord = getNextCoords(startCoords, direction);
+    let coordsAfterFirstChange: Coord | null = null;
     let directionChanges = 0;
+    let killCount = 0;
 
-    while (!isLoop && isInsideMap(tempMap, nextCoords)) {
+    while (!isLoop && isInsideMap(tempMap, nextCoords) && killCount < 100000) {
       const nextCoordsTemp = getNextCoords(nextCoords, direction);
       const nextMapValue = getMapValue(tempMap, nextCoordsTemp);
 
+      // console.log(
+      //   `###LOG###: obstructionCoords: ${obstructionCoords}, directionChanges: ${directionChanges}, direction: ${direction} startCoords: ${startCoords}, nextCoordsTemp: ${nextCoordsTemp}`,
+      // );
+
       if (["#", "O"].includes(nextMapValue)) {
         direction = NextDirection[direction];
+        if (coordsAfterFirstChange === null) {
+          coordsAfterFirstChange = nextCoords;
+        }
         directionChanges++;
         continue;
       }
 
-      if (directionChanges > 3 && startCoords.toString() === nextCoordsTemp.toString()) {
+      if (directionChanges > 4 && coordsAfterFirstChange?.toString() === nextCoordsTemp.toString()) {
         isLoop = true;
       }
 
-      if (isLoop) {
-        console.log("endless loop with:");
-        printMap(tempMap);
-      }
+      // if (isLoop) {
+      //   console.log("endless loop with:");
+      //   printMap(tempMap);
+      // }
 
       nextCoords = nextCoordsTemp;
+      killCount++;
     }
 
     return isLoop;
@@ -154,6 +163,7 @@ export const run = (raw: string) => {
         nextEndlessLoopStartCoords = nextCoords;
         nextEndlessLoopDirection = direction;
       }
+      // console.log(`isEndlessLoopMap: ${isEndlessLoopMap}`);
 
       if (nextMapValue === "#") {
         direction = NextDirection[direction];
@@ -167,18 +177,18 @@ export const run = (raw: string) => {
     return endlessLoopCount;
   };
 
-  // const obstacleMap2 = [
-  //   [".", ".", ".", ".", "#", ".", ".", ".", ".", "."],
-  //   [".", ".", ".", ".", ".", ".", ".", ".", ".", "#"],
-  //   [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-  //   [".", ".", "#", ".", ".", ".", ".", ".", ".", "."],
-  //   [".", ".", ".", ".", ".", ".", ".", "#", ".", "."],
-  //   [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-  //   [".", "#", ".", ".", "^", ".", ".", ".", ".", "."],
-  //   [".", ".", ".", ".", ".", ".", ".", ".", "#", "."],
-  //   ["#", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-  //   [".", ".", ".", ".", ".", ".", "#", ".", ".", "."],
-  // ];
+  const obstacleMap2 = [
+    [".", ".", ".", ".", "#", ".", ".", ".", ".", "."],
+    [".", ".", ".", ".", ".", ".", ".", ".", ".", "#"],
+    [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
+    [".", ".", "#", ".", ".", ".", ".", ".", ".", "."],
+    [".", ".", ".", ".", ".", ".", ".", "#", ".", "."],
+    [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
+    [".", "#", ".", ".", "^", ".", ".", ".", ".", "."],
+    [".", ".", ".", ".", ".", ".", ".", ".", "#", "."],
+    ["#", ".", ".", ".", ".", ".", ".", ".", ".", "."],
+    [".", ".", ".", ".", ".", ".", "#", ".", ".", "."],
+  ];
 
   const part2 = getPart2(obstacleMap);
 
